@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_IMAGE_NAME = 'gaurav123shub/calculator-app:latest'
+        DOCKERHUB_CREDENTIALS = 'dockerhub_credentials'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from the repository
+                git 'https://github.com/Gauravkr2024/Calculator-app.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                // Build the Docker image
+                script {
+                    docker.build(DOCKER_IMAGE_NAME)
+                }
+            }
+        }
+
+        stage('Push to DockerHub') {
+            steps {
+                // Push the Docker image to DockerHub
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDENTIALS) {
+                        docker.image(DOCKER_IMAGE_NAME).push()
+                    }
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                // Run the Docker container
+                script {
+                    docker.image(DOCKER_IMAGE_NAME).run('-d -p 8000:8000 --name calculator-app')
+                }
+            }
+        }
+
+        stage('Provide Access URL') {
+            steps {
+                echo 'Access the application at http://localhost:8000'
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up resources if needed
+            script {
+                docker.image(DOCKER_IMAGE_NAME).stop()
+                docker.image(DOCKER_IMAGE_NAME).remove()
+            }
+        }
+    }
+}
