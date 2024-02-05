@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: calculator-app
+  template:
+    metadata:
+      labels:
+        app: calculator-app
+    spec:
+      containers:
+      - name: calculator-app
+        image: gaurav123shub/calculator-app:2.0
+        ports:
+        - containerPort: 8000
+        env:
+        - name: NODE_ENV
+          value: production
+        imagePullPolicy: Always # Ensure Kubernetes always pulls the latest image
+        # Add imagePullSecrets to authenticate with Docker Hub
+      imagePullSecrets:
+      - name: docker-hub-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: calculator-app-service
+spec:
+  selector:
+    app: calculator-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: NodePort # Use LoadBalancer type to expose service externally
