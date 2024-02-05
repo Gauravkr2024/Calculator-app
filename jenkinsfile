@@ -7,11 +7,10 @@ pipeline {
     }
 
     stages {
-        agent any
 
-  stage('Checkout Source') {
-    steps {
-        script {
+      stage('Checkout Source') {
+         steps {
+           script {
             // Specify 'main' branch for Git checkout
             git branch: 'main', url: 'https://github.com/Gauravkr2024/Calculator-app.git'
         }
