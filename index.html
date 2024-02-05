@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator App</title>
+<style>
+  /* Add your CSS styles here */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+  }
+  .calculator-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  .calculator {
+    width: 300px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    margin-bottom: 20px;
+  }
+  .input {
+    width: calc(100% - 20px); /* Adjusted width */
+    margin-bottom: 10px; /* Added margin */
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+  }
+  .button {
+    padding: 10px;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+  }
+  .button:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+<div class="calculator-container">
+  <!-- Your existing app content can go here -->
+  <h1>Welcome to Calculator App</h1>
+  <!-- Add more content as needed -->
+  <div class="calculator">
+    <input type="text" class="input" id="display" readonly>
+    <div class="buttons">
+      <button class="button" onclick="appendToDisplay('7')">7</button>
+      <button class="button" onclick="appendToDisplay('8')">8</button>
+      <button class="button" onclick="appendToDisplay('9')">9</button>
+      <button class="button" onclick="clearDisplay()">C</button>
+      <button class="button" onclick="appendToDisplay('4')">4</button>
+      <button class="button" onclick="appendToDisplay('5')">5</button>
+      <button class="button" onclick="appendToDisplay('6')">6</button>
+      <button class="button" onclick="backspace()">←</button>
+      <button class="button" onclick="appendToDisplay('1')">1</button>
+      <button class="button" onclick="appendToDisplay('2')">2</button>
+      <button class="button" onclick="appendToDisplay('3')">3</button>
+      <button class="button" onclick="calculatePercentage()">%</button>
+      <button class="button" onclick="appendToDisplay('0')">0</button>
+      <button class="button" onclick="appendToDisplay('.')">.</button>
+      <button class="button" onclick="calculate()">=</button>
+      <button class="button" onclick="addToDisplay('+')">+</button>
+      <button class="button" onclick="addToDisplay('-')">-</button>
+      <button class="button" onclick="addToDisplay('*')">*</button>
+      <button class="button" onclick="addToDisplay('/')">/</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function appendToDisplay(value) {
+  document.getElementById('display').value += value;
+}
+
+function addToDisplay(operator) {
+  const display = document.getElementById('display');
+  const lastChar = display.value[display.value.length - 1];
+  if (lastChar === '+' || lastChar === '-' || lastChar === '*' || lastChar === '/') {
+    display.value = display.value.slice(0, -1);
+  }
+  display.value += operator;
+}
+
+function clearDisplay() {
+  document.getElementById('display').value = '';
+}
+
+function backspace() {
+  const display = document.getElementById('display');
+  display.value = display.value.slice(0, -1);
+}
+
+function calculate() {
+  const display = document.getElementById('display');
+  try {
+    const result = eval(display.value);
+    display.value = result;
+  } catch (error) {
+    display.value = 'Error';
+  }
+}
+
+function calculatePercentage() {
+  const display = document.getElementById('display');
+  try {
+    const result = eval(display.value) / 100;
+    display.value = result;
+  } catch (error) {
+    display.value = 'Error';
+  }
+}
+</script>
+</body>
+</html>
