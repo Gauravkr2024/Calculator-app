@@ -7,12 +7,16 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the code from the repository
-                git 'https://github.com/Gauravkr2024/Calculator-app.git'
-            }
+        agent any
+
+  stage('Checkout Source') {
+    steps {
+        script {
+            // Specify 'main' branch for Git checkout
+            git branch: 'main', url: 'https://github.com/Gauravkr2024/Calculator-app.git'
         }
+    }
+}
 
         stage('Build Docker Image') {
             steps {
