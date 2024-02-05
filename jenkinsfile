@@ -1,6 +1,11 @@
 pipeline {
     agent any
-    
+       agent {
+           // Use Docker tool configured in Jenkins
+           tools {
+               // Specify the Docker tool name
+               docker 'docker'
+           }
     environment {
         DOCKER_IMAGE_NAME = 'gaurav123shub/calculator-app:latest'
         DOCKERHUB_CREDENTIALS = 'dockerhub_credentials'
