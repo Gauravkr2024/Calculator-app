@@ -1,28 +1,29 @@
 pipeline {
     agent any
-       agent {
-           // Use Docker tool configured in Jenkins
-           tools {
-               // Specify the Docker tool name
-               docker 'docker'
-           }
+    
     environment {
         DOCKER_IMAGE_NAME = 'gaurav123shub/calculator-app:latest'
         DOCKERHUB_CREDENTIALS = 'dockerhub_credentials'
     }
 
     stages {
-
-      stage('Checkout Source') {
-         steps {
-           script {
-            // Specify 'main' branch for Git checkout
-            git branch: 'main', url: 'https://github.com/Gauravkr2024/Calculator-app.git'
+        stage('Checkout Source') {
+            steps {
+                script {
+                    // Checkout the code from the repository using the 'main' branch
+                    git branch: 'main', url: 'https://github.com/Gauravkr2024/Calculator-app.git'
+                }
+            }
         }
-    }
-}
 
         stage('Build Docker Image') {
+            agent {
+                // Use Docker tool configured in Jenkins
+                tools {
+                    // Specify the Docker tool name
+                    docker 'docker'
+                }
+            }
             steps {
                 // Build the Docker image
                 script {
@@ -32,6 +33,7 @@ pipeline {
         }
 
         stage('Push to DockerHub') {
+            agent any
             steps {
                 // Push the Docker image to DockerHub
                 script {
@@ -43,6 +45,7 @@ pipeline {
         }
 
         stage('Run Docker Container') {
+            agent any
             steps {
                 // Run the Docker container
                 script {
@@ -52,6 +55,7 @@ pipeline {
         }
 
         stage('Provide Access URL') {
+            agent any
             steps {
                 echo 'Access the application at http://localhost:8000'
             }
