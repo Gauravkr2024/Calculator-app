@@ -12,6 +12,7 @@ spec:
       labels:
         app: calculator-app
     spec:
+      serviceAccountName: my-service-account
       containers:
       - name: calculator-app
         image: gaurav123shub/calculator-app:2.0
@@ -23,7 +24,7 @@ spec:
         imagePullPolicy: Always # Ensure Kubernetes always pulls the latest image
         # Add imagePullSecrets to authenticate with Docker Hub
       imagePullSecrets:
-      - name: docker-hub-secret
+      - name: dockerhub-credentials
 ---
 apiVersion: v1
 kind: Service
