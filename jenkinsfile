@@ -1,5 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        // Use Docker tool configured in Jenkins
+        tools {
+            // Specify the Docker tool name
+            docker 'docker'
+        }
+    }
     
     environment {
         DOCKER_IMAGE_NAME = 'gaurav123shub/calculator-app:latest'
@@ -7,6 +13,15 @@ pipeline {
     }
 
     stages {
+        stage('Check Docker Version') {
+            steps {
+                script {
+                    // Run 'docker --version' command to check Docker version
+                    sh 'docker --version'
+                }
+            }
+        }
+        
         stage('Checkout Source') {
             steps {
                 script {
@@ -17,14 +32,6 @@ pipeline {
         }
 
         stage('Build Docker Image') {
-            agent {
-                // Use Docker tool configured in Jenkins
-                docker {
-                    // Specify the Docker tool name
-                    image 'docker'
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
             steps {
                 // Build the Docker image
                 script {
@@ -34,7 +41,6 @@ pipeline {
         }
 
         stage('Push to DockerHub') {
-            agent any
             steps {
                 // Push the Docker image to DockerHub
                 script {
@@ -46,7 +52,6 @@ pipeline {
         }
 
         stage('Run Docker Container') {
-            agent any
             steps {
                 // Run the Docker container
                 script {
@@ -56,7 +61,6 @@ pipeline {
         }
 
         stage('Provide Access URL') {
-            agent any
             steps {
                 echo 'Access the application at http://localhost:8000'
             }
