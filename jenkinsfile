@@ -1,9 +1,9 @@
 pipeline {
     agent {
         // Use Docker tool configured in Jenkins
-        tools {
+        docker {
             // Specify the Docker tool name
-            docker 'docker'
+            label 'docker'
         }
     }
     
