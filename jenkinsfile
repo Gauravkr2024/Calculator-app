@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub_credentials'
-        DOCKER_IMAGE_NAME = 'calculator-app:5.7'
+        DOCKER_IMAGE_NAME = 'calculator-app:5.8'
     }
     
     stages {
@@ -15,7 +15,7 @@ pipeline {
         
         stage('Tag Docker Image') {
             steps {
-                sh 'docker tag ${DOCKER_IMAGE_NAME} gaurav123shub/${DOCKER_IMAGE_NAME}:latest'
+                sh 'docker tag ${DOCKER_IMAGE_NAME} gaurav123shub/${DOCKER_IMAGE_NAME}'
             }
         }
         
