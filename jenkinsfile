@@ -3,27 +3,27 @@ pipeline {
     
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub_credentials'
-        DOCKER_IMAGE_NAME = 'Calculator-app:5.0'
+        DOCKER_IMAGE_NAME = 'calculator-app:5.0'
     }
     
     stages {
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t ${DOCKER_IMAGE_NAME} .'
+                sh 'sudo docker build -t ${DOCKER_IMAGE_NAME} .'
             }
         }
         
         stage('Run Docker Container') {
             steps {
-                sh 'docker run -d -p 8000:80 ${DOCKER_IMAGE_NAME}'
+                sh 'sudo docker run -d -p 8000:80 ${DOCKER_IMAGE_NAME}'
             }
         }
         
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
-                    sh "docker push ${DOCKER_IMAGE_NAME}"
+                    sh "sudo docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                    sh "sudo docker push ${DOCKER_IMAGE_NAME}"
                 }
             }
         }
