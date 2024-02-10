@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub_credentials'
-        DOCKER_IMAGE_NAME = 'your_dockerhub_repository'
+        DOCKER_IMAGE_NAME = 'gaurav123shub/Calculator-app:1.0'
     }
     
     stages {
