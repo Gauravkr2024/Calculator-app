@@ -3,7 +3,7 @@ pipeline {
     
     environment {
         DOCKER_CREDENTIALS_ID = 'dockerhub_credentials'
-        DOCKER_IMAGE_NAME = 'calculator-app:5.4'
+        DOCKER_IMAGE_NAME = 'calculator-app:5.5'
     }
     
     stages {
@@ -15,7 +15,7 @@ pipeline {
         
         stage('Run Docker Container') {
             steps {
-                sh 'docker run -d -p 8002:8002 ${DOCKER_IMAGE_NAME}'
+                sh 'docker run -d -p 8000:8000 ${DOCKER_IMAGE_NAME}'
             }
         }
         
