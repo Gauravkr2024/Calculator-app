@@ -1,79 +1,30 @@
 pipeline {
-    agent {
-        // Use Docker tool configured in Jenkins
-        docker {
-            // Specify the Docker image to use
-            image 'docker'
-            label 'docker'
-        }
-    }
+    agent any
     
     environment {
-        DOCKER_IMAGE_NAME = 'gaurav123shub/calculator-app:latest'
-        DOCKERHUB_CREDENTIALS = 'dockerhub_credentials'
+        DOCKER_CREDENTIALS_ID = 'dockerhub_credentials'
+        DOCKER_IMAGE_NAME = 'your_dockerhub_repository'
     }
-
+    
     stages {
-        stage('Check Docker Version') {
+        stage('Build Docker Image') {
             steps {
-                script {
-                    // Run 'docker --version' command to check Docker version
-                    sh 'docker --version'
-                }
+                sh 'docker build -t ${DOCKER_IMAGE_NAME} .'
             }
         }
         
-        stage('Checkout Source') {
-            steps {
-                script {
-                    // Checkout the code from the repository using the 'main' branch
-                    git branch: 'main', url: 'https://github.com/Gauravkr2024/Calculator-app.git'
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                // Build the Docker image
-                script {
-                    docker.build(DOCKER_IMAGE_NAME)
-                }
-            }
-        }
-
-        stage('Push to DockerHub') {
-            steps {
-                // Push the Docker image to DockerHub
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKERHUB_CREDENTIALS) {
-                        docker.image(DOCKER_IMAGE_NAME).push()
-                    }
-                }
-            }
-        }
-
         stage('Run Docker Container') {
             steps {
-                // Run the Docker container
-                script {
-                    docker.image(DOCKER_IMAGE_NAME).run('-d -p 8000:8000 --name calculator-app')
-                }
+                sh 'docker run -d -p 8000:80 ${DOCKER_IMAGE_NAME}'
             }
         }
-
-        stage('Provide Access URL') {
+        
+        stage('Push Docker Image') {
             steps {
-                echo 'Access the application at http://localhost:8000'
-            }
-        }
-    }
-
-    post {
-        always {
-            // Clean up resources if needed
-            script {
-                docker.image(DOCKER_IMAGE_NAME).stop()
-                docker.image(DOCKER_IMAGE_NAME).remove()
+                withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                    sh "docker push ${DOCKER_IMAGE_NAME}"
+                }
             }
         }
     }
