@@ -23,24 +23,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                    sh "docker run -d -p 8000:8000 gaurav123shub/${DOCKER_IMAGE_NAME}:latest"
                     sh "docker push gaurav123shub/${DOCKER_IMAGE_NAME}:latest"
                 }
             }
         }
-        
-        stage('SonarQube Scan') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar'
-                }
-            }
-        }
-        
-        stage('Deploy to Kubernetes') {
-            steps {
-                // Replace this with your Kubernetes deployment command
-                sh 'kubectl apply -f deployment.yaml'
-            }
-        }
-    }
 }
