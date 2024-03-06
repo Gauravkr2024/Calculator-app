@@ -16,4 +16,4 @@ Now create a kubernetes secret for your dockerhub credentials by which kubernete
     --from-file=.dockerconfigjson=/path/to/config.json \
     --type=kubernetes.io/dockerconfigjson"
 
-Now specify secret name as a imagepullsecret in specification section.
+Now mention secret name as a imagepullsecret in specification section.
